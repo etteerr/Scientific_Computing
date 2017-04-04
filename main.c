@@ -82,6 +82,6 @@ int main(int nargs, char** args) {
         }
     }
     
-    return program_entries[i].prog(nargs - 2, &args[arg]);
+    return program_entries[i].prog(nargs - 2, &args[++arg]);
 }
 
