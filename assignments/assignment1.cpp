@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 //Entry point
 int assignment1(int nargs, char** args) {
     printf("Arguments received: %i\n", nargs);
