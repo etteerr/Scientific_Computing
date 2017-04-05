@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "assignments/assignment1.h"
+#include "assignments.h"
 
 struct program_entry {
     const char name[256];
@@ -26,7 +26,7 @@ void print_specific(char * name) {
     unsigned int nEntries = sizeof(program_entries)/sizeof(struct program_entry);
     char help_printed = 0;
     
-    for(int i = 0; i < nEntries; i++)
+    for(unsigned int i = 0; i < nEntries; i++)
         if ( strcmp(program_entries[i].name, name)==0) {
             if (program_entries[i].args) {
                 program_entries[i].args();
@@ -45,7 +45,7 @@ void print_options() {
     printf("Usage: ./scientific_computing help [program]\n");
     printf("Options are: \n");
     
-    for(int i = 0; i < nEntries; i++)
+    for(unsigned int i = 0; i < nEntries; i++)
         printf("\t%s\n", program_entries[i].name);
     printf("For more options: help [name of option]\n");
 }
@@ -73,9 +73,9 @@ int main(int nargs, char** args) {
         return 0;
     }
     
-    struct program_entry pe;
     unsigned int nEntries = sizeof(program_entries)/sizeof(struct program_entry);
-    int i = 0;
+    
+    unsigned int i = 0;
     for(; i<nEntries; i++) {
         if (strcmp(program_entries[i].name, args[arg])==0) {
             break;
