@@ -13,8 +13,11 @@ extern "C" {
 #endif
 
     //Assignment 1 extern
-    int assignment1(int nargs, char** args);
-    void ass1_help();
+    int vibratingString(int nargs, char** args);
+    void vibratingString_help();
+    
+    //test functions
+    int test_opencv(int nargs, char ** args);
 
 
 #ifdef __cplusplus

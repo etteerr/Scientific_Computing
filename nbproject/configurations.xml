@@ -13,8 +13,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>assignments/assignment1.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
+      <itemPath>testcode/opencvtest.cpp</itemPath>
+      <itemPath>assignments/vibratingString.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -60,11 +61,13 @@
           <commandLine>-static-libgcc -static-libstdc++</commandLine>
         </linkerTool>
       </compileType>
-      <item path="assignments/assignment1.cpp" ex="false" tool="1" flavor2="0">
+      <item path="assignments/vibratingString.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="headers/assignments.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="testcode/opencvtest.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -97,11 +100,13 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="assignments/assignment1.cpp" ex="false" tool="1" flavor2="0">
+      <item path="assignments/vibratingString.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="headers/assignments.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="testcode/opencvtest.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

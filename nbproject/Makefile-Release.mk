@@ -35,16 +35,17 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/assignments/assignment1.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/assignments/vibratingString.o \
+	${OBJECTDIR}/src/main.o \
+	${OBJECTDIR}/testcode/opencvtest.o
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-fopenmp
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-fopenmp
+CXXFLAGS=-fopenmp
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -61,17 +62,22 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scientific_computing: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scientific_computing ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scientific_computing ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/assignments/assignment1.o: assignments/assignment1.c
+${OBJECTDIR}/assignments/vibratingString.o: assignments/vibratingString.cpp
 	${MKDIR} -p ${OBJECTDIR}/assignments
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/assignments/assignment1.o assignments/assignment1.c
+	$(COMPILE.cc) -O2 -Iheaders -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/assignments/vibratingString.o assignments/vibratingString.cpp
 
-${OBJECTDIR}/main.o: main.c
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/main.o: src/main.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -std=c11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.cc) -O2 -Iheaders -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cpp
+
+${OBJECTDIR}/testcode/opencvtest.o: testcode/opencvtest.cpp
+	${MKDIR} -p ${OBJECTDIR}/testcode
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Iheaders -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/testcode/opencvtest.o testcode/opencvtest.cpp
 
 # Subprojects
 .build-subprojects:

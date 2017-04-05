@@ -17,8 +17,8 @@ struct program_entry {
 };
 
 const struct program_entry program_entries[] = {
-    {"assignment1", assignment1, ass1_help},
-    {"test", assignment1, 0}
+    {"vibratingString", vibratingString, vibratingString_help},
+    {"testOpenCV", test_opencv, 0}
 };
 
 
