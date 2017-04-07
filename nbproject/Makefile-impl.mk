@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Scientific_computing
+PROJECTNAME=Scientific_Computing
 
 # Active Configuration
 DEFAULTCONF=Debug
