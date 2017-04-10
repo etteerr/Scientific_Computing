@@ -4,8 +4,9 @@
 #include <math.h>
 #include <cstring>
 #include <exception>
+#include <opencv2/opencv.hpp>
 
-#define C 0.0
+#define C 1.0
 /*
     U_{i,j+1} = 
     \frac{C(\delta t)^2}{(\delta x)^2} %constant part
@@ -22,7 +23,7 @@
 
 struct param {
     double dt = 0.001;
-    double dx = 0.1;
+    double dx = 0.001;
     size_t segments = 10; //n or the amount of segments to simulate
     double time = 1.0; 
     int sfun = 0;
@@ -72,15 +73,34 @@ int vibratingString(int nargs, char** args) {
     
     //Simulate and save
     double *arr = new double[p.segments];
-    int i = 0;
-    arr[i++] = 0;
-    for(; i < p.segments-1;)
-        arr[i++]=fun((double)i*p.dx);
-    
-    arr[i] = 0;
-    
     double *parr = new double[p.segments];
     double *narr = new double[p.segments];
+    int timesteps = p.time/p.dt;
+    int i = 0;
+    arr[i++] = 0;
+    
+    for(; i < p.segments-1;){
+        arr[i++]=fun((double)i*p.dx);
+        parr[i++]=fun((double)i*p.dx);
+        narr[i++]=fun((double)i*p.dx);
+    }
+    
+    arr[i] = 0;
+
+ 
+    for(int j=0; j < timesteps; j++){
+        parr = arr;
+        arr = narr; 
+        for(int k=0; k < p.segments; k++)
+            narr[k] = Uij1(&arr[k], &parr[k], p.dt, p.dx);
+    
+        img = zeros(0,0,3)
+        cv::clipLine()
+        
+    }
+
+    
+    
     
         
 }
