@@ -7,6 +7,10 @@
 #include <opencv2/opencv.hpp>
 
 #define C 1.0
+#define w 512
+
+using namespace cv;
+
 /*
     U_{i,j+1} = 
     \frac{C(\delta t)^2}{(\delta x)^2} %constant part
@@ -42,9 +46,17 @@ double f3(double x){
     else
         return 0;
 }
-
-
-        
+     
+void MyLine( Mat img, Point start, Point end ){
+  int thickness = 2;
+  int lineType = LINE_8;
+  line( img,
+    start,
+    end,
+    Scalar( 0, 0, 0 ),
+    thickness,
+    lineType );
+}
 
 //Entry point
 int vibratingString(int nargs, char** args) {
@@ -75,28 +87,42 @@ int vibratingString(int nargs, char** args) {
     double *arr = new double[p.segments];
     double *parr = new double[p.segments];
     double *narr = new double[p.segments];
+    double *tmp = new double[p.segments];
+    double *xpoints = new double[p.segments];
     int timesteps = p.time/p.dt;
     int i = 0;
     arr[i++] = 0;
-    
-    for(; i < p.segments-1;){
-        arr[i++]=fun((double)i*p.dx);
-        parr[i++]=fun((double)i*p.dx);
-        narr[i++]=fun((double)i*p.dx);
+    parr[i] = 0;
+    narr[i] = 0;
+    xpoints[i] = 0;
+    for(; i < p.segments-1;i++){
+        arr[i] = fun((double)i*p.dx);
+        parr[i] = fun((double)i*p.dx);
+        narr[i] = fun((double)i*p.dx);
+        xpoints[i] = (p.segments/w)*i;
     }
     
-    arr[i] = 0;
-
+    arr[++i] = 0;
+    parr[i] = 0;
+    narr[i] = 0;
+    xpoints[i] = w;
+    int last = ( sizeof(xpoints) / sizeof(xpoints[0]) ) - 1;
  
     for(int j=0; j < timesteps; j++){
+        Mat image = Mat::zeros(w,w, CV_8UC3);
+        
+        for(int k=1; k < p.segments-1; k++){
+            narr[k] = Uij1(&arr[k], &parr[k], p.dt, p.dx);
+            MyLine(image, Point(xpoints[k]-1, arr[k]-1),Point(xpoints[k], arr[k]) );
+        }
+        MyLine(image, Point(xpoints[last-1], arr[last-1]),Point(xpoints[last],arr[last]));
+        imshow("Window",image);
+        moveWindow("Window",0,200);
+        
+        tmp = parr;
         parr = arr;
         arr = narr; 
-        for(int k=0; k < p.segments; k++)
-            narr[k] = Uij1(&arr[k], &parr[k], p.dt, p.dx);
-    
-        img = zeros(0,0,3)
-        cv::clipLine()
-        
+        narr = tmp;
     }
 
     
