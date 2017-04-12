@@ -26,9 +26,9 @@ using namespace cv;
 #define Uij1(x, px, dt, dx) C * (pow(dt,2.0) / pow(dx, 2.0)) * ((*(x+1)) + (*(x-1)) - 2*(*x)) + 2*(*x) - *px
 
 struct param {
-    double dt = 0.001;
-    double dx = 0.001;
-    size_t segments = 10; //n or the amount of segments to simulate
+    double dt = 0.01;
+    double dx = 0.01;
+    size_t segments = 100; //n or the amount of segments to simulate
     double time = 1.0; 
     int sfun = 0;
     char outputFile[256] = "vibratingString.jpg";
@@ -47,16 +47,16 @@ double f3(double x){
         return 0;
 }
      
-void MyLine( Mat img, Point start, Point end ){
-  int thickness = 2;
-  int lineType = LINE_8;
-  line( img,
-    start,
-    end,
-    Scalar( 0, 0, 0 ),
-    thickness,
-    lineType );
-}
+//void MyLine( Mat img, Point start, Point end ){
+  //int thickness = 2;
+  //int lineType = LINE_8;
+ // line( img,
+ //   start,
+ //   end,
+ //   Scalar( 255, 255, 255 ),
+  //  thickness,
+  //  lineType );
+//}
 
 //Entry point
 int vibratingString(int nargs, char** args) {
@@ -83,41 +83,50 @@ int vibratingString(int nargs, char** args) {
             break;
     }
     
-    //Simulate and save
+    //Initialization
     double *arr = new double[p.segments];
     double *parr = new double[p.segments];
     double *narr = new double[p.segments];
     double *tmp = new double[p.segments];
-    double *xpoints = new double[p.segments];
+    int *xpoints = new int[p.segments];
     int timesteps = p.time/p.dt;
     int i = 0;
-    arr[i++] = 0;
+//    int w,h;
+    
+    arr[i] = 0;
     parr[i] = 0;
     narr[i] = 0;
     xpoints[i] = 0;
-    for(; i < p.segments-1;i++){
+    for(i=1; i < p.segments-1;i++){
         arr[i] = fun((double)i*p.dx);
         parr[i] = fun((double)i*p.dx);
         narr[i] = fun((double)i*p.dx);
-        xpoints[i] = (p.segments/w)*i;
+        xpoints[i] = ((double)i/p.segments)*w;
     }
     
     arr[++i] = 0;
     parr[i] = 0;
     narr[i] = 0;
     xpoints[i] = w;
-    int last = ( sizeof(xpoints) / sizeof(xpoints[0]) ) - 1;
+    int last =  p.segments - 1;
+    int thickness = 2;
+    int lineType = LINE_8;
+    VideoWriter outp;
+    Size s = Size(w,w);
+    outp.open("video.avi", CV_FOURCC('h','2','6','4'), 30, s, 1);
+    Mat image = Mat::eye(w,w, CV_8UC3);
  
+    //Simulate and save
     for(int j=0; j < timesteps; j++){
-        Mat image = Mat::zeros(w,w, CV_8UC3);
         
         for(int k=1; k < p.segments-1; k++){
             narr[k] = Uij1(&arr[k], &parr[k], p.dt, p.dx);
-            MyLine(image, Point(xpoints[k]-1, arr[k]-1),Point(xpoints[k], arr[k]) );
+            line(image, Point(xpoints[k-1], (int)(arr[k-1]+w/2)), Point(xpoints[k], (int)(arr[k]+w/2)), Scalar( 255, 255, 255 ), thickness, lineType );
+            //MyLine(image, Point(xpoints[k-1], arr[k-1]+w/2),Point(xpoints[k], arr[k]+w/2) );
         }
-        MyLine(image, Point(xpoints[last-1], arr[last-1]),Point(xpoints[last],arr[last]));
-        imshow("Window",image);
-        moveWindow("Window",0,200);
+        line( image, Point(xpoints[last-1], (int)(arr[last-1]+w/2)),Point(xpoints[last],(int)(arr[last]+w/2)), Scalar( 255, 255, 255 ), thickness, lineType );
+        //MyLine(image, Point(xpoints[last-1], arr[last-1]+w/2),Point(xpoints[last],arr[last]+w/2));
+        outp << image;
         
         tmp = parr;
         parr = arr;
