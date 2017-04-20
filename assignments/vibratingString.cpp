@@ -7,7 +7,6 @@
 #include <opencv2/opencv.hpp>
 
 #define C 1.0
-#define w 512
 
 using namespace cv;
 
@@ -91,43 +90,47 @@ int vibratingString(int nargs, char** args) {
     int *xpoints = new int[p.segments];
     int timesteps = p.time/p.dt;
     int i = 0;
-//    int w,h;
+    int w = 512;
     
     arr[i] = 0;
     parr[i] = 0;
     narr[i] = 0;
     xpoints[i] = 0;
-    for(i=1; i < p.segments-1;i++){
+    for(i=1; i < p.segments-2;i++){
         arr[i] = fun((double)i*p.dx);
         parr[i] = fun((double)i*p.dx);
         narr[i] = fun((double)i*p.dx);
-        xpoints[i] = ((double)i/p.segments)*w;
+        xpoints[i] = ((double)i/(((double)p.segments)-1))*w;
     }
     
     arr[++i] = 0;
     parr[i] = 0;
     narr[i] = 0;
     xpoints[i] = w;
-    int last =  p.segments - 1;
+    int last =  p.segments-1;
     int thickness = 2;
-    int lineType = LINE_8;
     VideoWriter outp;
     Size s = Size(w,w);
-    outp.open("video.avi", CV_FOURCC('h','2','6','4'), 30, s, 1);
-    Mat image = Mat::eye(w,w, CV_8UC3);
+    //outp.open("video.avi", CV_FOURCC('H','2','6','4'), 1, s, 1);
+    Mat image = Mat::zeros(w,w, CV_8UC1);
+   // image.at<uchar>(255,255) = 255;
+    
+   // outp << image;
+    
+    
  
     //Simulate and save
     for(int j=0; j < timesteps; j++){
-        
+        Mat image = Mat::zeros(w,w, CV_8UC1);
         for(int k=1; k < p.segments-1; k++){
             narr[k] = Uij1(&arr[k], &parr[k], p.dt, p.dx);
-            line(image, Point(xpoints[k-1], (int)(arr[k-1]+w/2)), Point(xpoints[k], (int)(arr[k]+w/2)), Scalar( 255, 255, 255 ), thickness, lineType );
+            line(image, Point(xpoints[k-1], (int)(10*arr[k-1]+w/2)), Point(xpoints[k], (int)(10*arr[k]+w/2)), Scalar( 255, 255, 255 ), thickness );
             //MyLine(image, Point(xpoints[k-1], arr[k-1]+w/2),Point(xpoints[k], arr[k]+w/2) );
         }
-        line( image, Point(xpoints[last-1], (int)(arr[last-1]+w/2)),Point(xpoints[last],(int)(arr[last]+w/2)), Scalar( 255, 255, 255 ), thickness, lineType );
+        line( image, Point(xpoints[last-1], (int)(10*arr[last-1]+w/2)),Point(xpoints[last],(int)(10*arr[last]+w/2)), Scalar( 255, 255, 255 ), thickness );
         //MyLine(image, Point(xpoints[last-1], arr[last-1]+w/2),Point(xpoints[last],arr[last]+w/2));
-        outp << image;
-        
+        //outp << image;
+        imwrite("test1.jpeg", image);
         tmp = parr;
         parr = arr;
         arr = narr; 
